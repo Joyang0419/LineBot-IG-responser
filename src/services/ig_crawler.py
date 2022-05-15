@@ -1,7 +1,6 @@
+import json
 import os
 import pathlib
-import urllib.request
-import json
 from typing import List, Literal, Union
 
 from instagram_scraper.app import InstagramScraper
@@ -37,6 +36,7 @@ class ServiceInstagramScraper(InstagramScraper):
     def start_crawl(self, account: str):
         self.authenticate_with_login()
         shared_data = self.get_shared_data_userinfo(username=account)
+        os.makedirs(PHOTOS_PATH, exist_ok=True)
 
         if not shared_data:
             return
@@ -53,10 +53,3 @@ class ServiceInstagramScraper(InstagramScraper):
             mode='w'
         ) as f:
             f.write(json.dumps(data))
-
-    @staticmethod
-    def _save_image(url: str, filename: str):
-        urllib.request.urlretrieve(
-            url=url,
-            filename=filename
-        )
